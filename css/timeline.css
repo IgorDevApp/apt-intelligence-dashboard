@@ -1,0 +1,572 @@
+/**
+ * APT Intelligence Dashboard - Timeline Styles
+ * 
+ * Chronological timeline visualization for threat actors.
+ * 
+ * @version 1.0.0
+ */
+
+/* =========================================================================
+   TIMELINE CONTAINER
+   ========================================================================= */
+
+.timeline-container {
+    position: relative;
+    padding: var(--space-lg) 0;
+}
+
+/* Central timeline line */
+.timeline-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 120px;
+    width: 2px;
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        var(--color-border-primary) 5%,
+        var(--color-border-primary) 95%,
+        transparent
+    );
+}
+
+/* =========================================================================
+   TIMELINE YEAR MARKERS
+   ========================================================================= */
+
+.timeline-year {
+    position: relative;
+    margin-bottom: var(--space-xl);
+}
+
+.timeline-year-label {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100px;
+    font-family: var(--font-mono);
+    font-size: var(--text-xl);
+    font-weight: 500;
+    color: var(--color-accent-primary);
+    text-align: right;
+    padding-right: var(--space-md);
+}
+
+.timeline-year-marker {
+    position: absolute;
+    left: 114px;
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    background: var(--color-bg-primary);
+    border: 3px solid var(--color-accent-primary);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+.timeline-year-content {
+    margin-left: 150px;
+    padding-top: var(--space-xs);
+}
+
+/* =========================================================================
+   TIMELINE ITEMS
+   ========================================================================= */
+
+.timeline-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.timeline-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -36px;
+    top: 50%;
+    width: 30px;
+    height: 2px;
+    background: var(--color-border-primary);
+}
+
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    left: -42px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    margin-top: -4px;
+    background: var(--color-bg-tertiary);
+    border: 2px solid var(--color-border-primary);
+    border-radius: 50%;
+    transition: all var(--transition-fast);
+}
+
+.timeline-item:hover {
+    border-color: var(--color-accent-primary);
+    background: var(--color-bg-tertiary);
+    transform: translateX(4px);
+}
+
+.timeline-item:hover::after {
+    background: var(--color-accent-primary);
+    border-color: var(--color-accent-primary);
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+}
+
+/* Timeline Item Content */
+.timeline-item-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-lg);
+    flex-shrink: 0;
+}
+
+.timeline-item-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.timeline-item-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+}
+
+.timeline-item-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    color: var(--color-text-primary);
+    font-weight: 500;
+}
+
+.timeline-item-country {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    padding: 2px var(--space-sm);
+    background: var(--color-bg-elevated);
+    border-radius: var(--radius-sm);
+}
+
+.timeline-item-description {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.timeline-item-meta {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-sm);
+}
+
+.timeline-item-tag {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+/* =========================================================================
+   REPORTS TIMELINE VIEW
+   ========================================================================= */
+
+.reports-timeline {
+    position: relative;
+    padding-left: 140px;
+}
+
+.reports-timeline::before {
+    content: '';
+    position: absolute;
+    left: 120px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--color-border-primary);
+}
+
+.reports-year-group {
+    margin-bottom: var(--space-xl);
+}
+
+.reports-year-label {
+    position: absolute;
+    left: 0;
+    width: 110px;
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    color: var(--color-accent-secondary);
+    text-align: right;
+}
+
+.reports-month-group {
+    margin-bottom: var(--space-lg);
+}
+
+.reports-month-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+    padding-left: var(--space-lg);
+}
+
+/* =========================================================================
+   REPORTS LIST VIEW
+   ========================================================================= */
+
+.reports-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.report-list-item {
+    display: grid;
+    grid-template-columns: 100px 1fr 150px 100px;
+    gap: var(--space-md);
+    align-items: center;
+    padding: var(--space-md) var(--space-lg);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.report-list-item:hover {
+    border-color: var(--color-accent-primary);
+    background: var(--color-bg-tertiary);
+}
+
+.report-list-date {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+}
+
+.report-list-title {
+    font-size: var(--text-sm);
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.report-list-source {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent-secondary);
+}
+
+.report-list-actors {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.report-actor-chip {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    padding: 2px var(--space-sm);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--radius-sm);
+    color: var(--color-accent-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.report-actor-chip:hover {
+    background: var(--color-accent-primary);
+    color: var(--color-bg-primary);
+}
+
+.report-list-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    transition: all var(--transition-fast);
+}
+
+.report-list-link:hover {
+    background: var(--color-accent-secondary);
+    border-color: var(--color-accent-secondary);
+    color: var(--color-bg-primary);
+    text-decoration: none;
+}
+
+/* =========================================================================
+   STATISTICS VIEW
+   ========================================================================= */
+
+.statistics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: var(--space-lg);
+}
+
+.stat-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+}
+
+.stat-card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-border-secondary);
+}
+
+.stat-card-icon {
+    font-size: var(--text-xl);
+}
+
+.stat-card-title {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    letter-spacing: 0.1em;
+}
+
+.stat-card-content {
+    min-height: 200px;
+}
+
+/* Bar Chart */
+.bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.bar-chart-item {
+    display: grid;
+    grid-template-columns: 120px 1fr 60px;
+    gap: var(--space-md);
+    align-items: center;
+}
+
+.bar-chart-label {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bar-chart-bar {
+    height: 20px;
+    background: var(--color-bg-tertiary);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.bar-chart-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-secondary));
+    border-radius: var(--radius-sm);
+    transition: width var(--transition-normal);
+}
+
+.bar-chart-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-align: right;
+}
+
+/* Summary Stats */
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+}
+
+.summary-stat {
+    text-align: center;
+    padding: var(--space-lg);
+    background: var(--color-bg-tertiary);
+    border-radius: var(--radius-md);
+}
+
+.summary-stat-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-3xl);
+    color: var(--color-accent-primary);
+    margin-bottom: var(--space-xs);
+}
+
+.summary-stat-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    letter-spacing: 0.1em;
+}
+
+/* Year Distribution */
+.year-distribution {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 150px;
+    padding-top: var(--space-md);
+}
+
+.year-bar {
+    flex: 1;
+    background: var(--color-accent-primary);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    min-height: 4px;
+    position: relative;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    opacity: 0.7;
+}
+
+.year-bar:hover {
+    opacity: 1;
+    background: var(--color-accent-secondary);
+}
+
+.year-bar-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-fast);
+}
+
+.year-bar:hover .year-bar-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+.year-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+}
+
+/* =========================================================================
+   EMPTY STATES
+   ========================================================================= */
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2xl);
+    text-align: center;
+}
+
+.empty-state-icon {
+    font-size: 48px;
+    margin-bottom: var(--space-lg);
+    opacity: 0.3;
+}
+
+.empty-state-title {
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.empty-state-message {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    max-width: 400px;
+}
+
+/* =========================================================================
+   LOADING STATES
+   ========================================================================= */
+
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--color-bg-tertiary) 25%,
+        var(--color-bg-elevated) 50%,
+        var(--color-bg-tertiary) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: var(--radius-sm);
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.skeleton-card {
+    height: 180px;
+    border-radius: var(--radius-md);
+}
+
+.skeleton-text {
+    height: 16px;
+    margin-bottom: var(--space-sm);
+}
+
+.skeleton-text.short {
+    width: 60%;
+}
+
+.skeleton-text.medium {
+    width: 80%;
+}

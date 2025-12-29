@@ -1,0 +1,514 @@
+/**
+ * APT Intelligence Dashboard - Animation Styles
+ * 
+ * Typewriter effects, transitions, and other animations.
+ * 
+ * @version 1.0.0
+ */
+
+/* =========================================================================
+   TYPEWRITER ANIMATION
+   ========================================================================= */
+
+.typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.typewriter-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.2em;
+    background: var(--color-accent-primary);
+    margin-left: 2px;
+    animation: cursor-blink 0.7s step-end infinite;
+    vertical-align: text-bottom;
+}
+
+@keyframes cursor-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Multi-line typewriter for descriptions */
+.typewriter-multiline {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.typewriter-multiline .typewriter-cursor {
+    display: inline;
+}
+
+/* Typewriter complete state */
+.typewriter-complete .typewriter-cursor {
+    animation: cursor-fade 0.5s forwards;
+}
+
+@keyframes cursor-fade {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* =========================================================================
+   FADE ANIMATIONS
+   ========================================================================= */
+
+.fade-in {
+    animation: fade-in 0.3s ease forwards;
+}
+
+.fade-out {
+    animation: fade-out 0.3s ease forwards;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+/* Staggered fade-in for lists */
+.stagger-fade-in > * {
+    opacity: 0;
+    animation: fade-in 0.3s ease forwards;
+}
+
+.stagger-fade-in > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-fade-in > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-fade-in > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-fade-in > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger-fade-in > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-fade-in > *:nth-child(6) { animation-delay: 0.3s; }
+.stagger-fade-in > *:nth-child(7) { animation-delay: 0.35s; }
+.stagger-fade-in > *:nth-child(8) { animation-delay: 0.4s; }
+.stagger-fade-in > *:nth-child(9) { animation-delay: 0.45s; }
+.stagger-fade-in > *:nth-child(10) { animation-delay: 0.5s; }
+
+/* =========================================================================
+   SLIDE ANIMATIONS
+   ========================================================================= */
+
+.slide-in-left {
+    animation: slide-in-left 0.3s ease forwards;
+}
+
+.slide-in-right {
+    animation: slide-in-right 0.3s ease forwards;
+}
+
+.slide-in-up {
+    animation: slide-in-up 0.3s ease forwards;
+}
+
+.slide-in-down {
+    animation: slide-in-down 0.3s ease forwards;
+}
+
+@keyframes slide-in-left {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slide-in-right {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slide-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide-in-down {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================================
+   SCALE ANIMATIONS
+   ========================================================================= */
+
+.scale-in {
+    animation: scale-in 0.2s ease forwards;
+}
+
+.scale-out {
+    animation: scale-out 0.2s ease forwards;
+}
+
+@keyframes scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes scale-out {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}
+
+/* =========================================================================
+   PULSE ANIMATIONS
+   ========================================================================= */
+
+.pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.pulse-subtle {
+    animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.02);
+    }
+}
+
+@keyframes pulse-subtle {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* Glow pulse for highlights */
+.glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(0, 255, 136, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+    }
+}
+
+/* =========================================================================
+   LOADING ANIMATIONS
+   ========================================================================= */
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.bounce {
+    animation: bounce 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-5px); }
+}
+
+/* Dots loading animation */
+.loading-dots {
+    display: inline-flex;
+    gap: 4px;
+}
+
+.loading-dots span {
+    width: 6px;
+    height: 6px;
+    background: var(--color-accent-primary);
+    border-radius: 50%;
+    animation: loading-dot 1.4s ease-in-out infinite both;
+}
+
+.loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+.loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+.loading-dots span:nth-child(3) { animation-delay: 0s; }
+
+@keyframes loading-dot {
+    0%, 80%, 100% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* =========================================================================
+   SCAN LINE EFFECT
+   ========================================================================= */
+
+.scan-lines::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.1) 2px,
+        rgba(0, 0, 0, 0.1) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Scanning animation for effect */
+.scanning::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--color-accent-primary),
+        transparent
+    );
+    animation: scan 2s linear infinite;
+    z-index: 2;
+}
+
+@keyframes scan {
+    0% { top: 0; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
+/* =========================================================================
+   GLITCH EFFECT
+   ========================================================================= */
+
+.glitch {
+    position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glitch::before {
+    left: 2px;
+    text-shadow: -2px 0 var(--color-accent-danger);
+    clip: rect(24px, 550px, 90px, 0);
+    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+    left: -2px;
+    text-shadow: -2px 0 var(--color-accent-secondary);
+    clip: rect(85px, 550px, 140px, 0);
+    animation: glitch-anim 2.5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+    0% { clip: rect(19px, 9999px, 14px, 0); }
+    5% { clip: rect(86px, 9999px, 95px, 0); }
+    10% { clip: rect(78px, 9999px, 45px, 0); }
+    15% { clip: rect(48px, 9999px, 79px, 0); }
+    20% { clip: rect(59px, 9999px, 68px, 0); }
+    25% { clip: rect(37px, 9999px, 12px, 0); }
+    30% { clip: rect(91px, 9999px, 23px, 0); }
+    35% { clip: rect(14px, 9999px, 84px, 0); }
+    40% { clip: rect(72px, 9999px, 36px, 0); }
+    45% { clip: rect(25px, 9999px, 91px, 0); }
+    50% { clip: rect(63px, 9999px, 47px, 0); }
+    55% { clip: rect(81px, 9999px, 19px, 0); }
+    60% { clip: rect(34px, 9999px, 75px, 0); }
+    65% { clip: rect(52px, 9999px, 28px, 0); }
+    70% { clip: rect(96px, 9999px, 61px, 0); }
+    75% { clip: rect(17px, 9999px, 88px, 0); }
+    80% { clip: rect(43px, 9999px, 54px, 0); }
+    85% { clip: rect(69px, 9999px, 31px, 0); }
+    90% { clip: rect(28px, 9999px, 72px, 0); }
+    95% { clip: rect(84px, 9999px, 16px, 0); }
+    100% { clip: rect(55px, 9999px, 93px, 0); }
+}
+
+@keyframes glitch-anim-2 {
+    0% { clip: rect(65px, 9999px, 99px, 0); }
+    5% { clip: rect(21px, 9999px, 46px, 0); }
+    10% { clip: rect(87px, 9999px, 33px, 0); }
+    15% { clip: rect(12px, 9999px, 71px, 0); }
+    20% { clip: rect(94px, 9999px, 58px, 0); }
+    25% { clip: rect(38px, 9999px, 82px, 0); }
+    30% { clip: rect(76px, 9999px, 25px, 0); }
+    35% { clip: rect(49px, 9999px, 67px, 0); }
+    40% { clip: rect(83px, 9999px, 41px, 0); }
+    45% { clip: rect(27px, 9999px, 89px, 0); }
+    50% { clip: rect(61px, 9999px, 18px, 0); }
+    55% { clip: rect(35px, 9999px, 74px, 0); }
+    60% { clip: rect(92px, 9999px, 52px, 0); }
+    65% { clip: rect(16px, 9999px, 86px, 0); }
+    70% { clip: rect(73px, 9999px, 29px, 0); }
+    75% { clip: rect(44px, 9999px, 95px, 0); }
+    80% { clip: rect(88px, 9999px, 37px, 0); }
+    85% { clip: rect(22px, 9999px, 63px, 0); }
+    90% { clip: rect(57px, 9999px, 81px, 0); }
+    95% { clip: rect(31px, 9999px, 48px, 0); }
+    100% { clip: rect(79px, 9999px, 15px, 0); }
+}
+
+/* =========================================================================
+   MODAL ANIMATIONS
+   ========================================================================= */
+
+.modal-enter {
+    animation: modal-enter 0.3s ease forwards;
+}
+
+.modal-exit {
+    animation: modal-exit 0.2s ease forwards;
+}
+
+@keyframes modal-enter {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modal-exit {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.modal-container.modal-enter {
+    animation: modal-container-enter 0.3s ease forwards;
+}
+
+.modal-container.modal-exit {
+    animation: modal-container-exit 0.2s ease forwards;
+}
+
+@keyframes modal-container-enter {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes modal-container-exit {
+    from {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.95) translateY(-20px);
+    }
+}
+
+/* =========================================================================
+   REDUCED MOTION
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .typewriter-cursor {
+        animation: none;
+        opacity: 1;
+    }
+}
+
+/* =========================================================================
+   UTILITY: DISABLE ANIMATIONS
+   ========================================================================= */
+
+.no-animations *,
+.no-animations *::before,
+.no-animations *::after {
+    animation: none !important;
+    transition: none !important;
+}

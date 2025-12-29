@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="APT Intelligence Dashboard - Interactive threat actor visualization and intelligence tracking">
+    <meta name="author" content="APT Intelligence Dashboard">
+    
+    <title>APT Intelligence Dashboard</title>
+    
+    <!-- PWA Support (manifest added via JS for file:// compatibility) -->
+    <meta name="theme-color" content="#00ff88">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="APT Dashboard">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Roboto+Condensed:wght@300;400;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- D3.js and TopoJSON for world map -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dossier.css">
+    <link rel="stylesheet" href="css/timeline.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/worldmap.css">
+    <link rel="stylesheet" href="css/print.css" media="print">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+</head>
+<body>
+    <!-- Skip Link - Must be first focusable element (WCAG 2.4.1) -->
+    <a href="#main-content" class="skip-link" id="skip-link">
+        Skip to main content
+    </a>
+
+    <!-- Screen Reader Announcements -->
+    <div id="sr-announcer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+    <div id="sr-announcer-assertive" class="visually-hidden" aria-live="assertive" aria-atomic="true"></div>
+
+    <!-- ================================================================== -->
+    <!-- LOADING SCREEN                                                     -->
+    <!-- ================================================================== -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <div class="radar-sweep"></div>
+                <div class="radar-dot"></div>
+            </div>
+            <h1 class="loading-title">APT INTELLIGENCE DASHBOARD</h1>
+            <div class="loading-status">
+                <div class="loading-bar">
+                    <div class="loading-bar-fill" id="loading-bar-fill"></div>
+                </div>
+                <p class="loading-message" id="loading-message">INITIALIZING SYSTEMS...</p>
+                <p class="loading-substatus" id="loading-substatus"></p>
+            </div>
+            <div class="loading-stats" id="loading-stats">
+                <span class="stat-item" id="stat-actors">ACTORS: --</span>
+                <span class="stat-item" id="stat-reports">REPORTS: --</span>
+                <span class="stat-item" id="stat-ttps">TTPs: --</span>
+                <span class="stat-item" id="stat-sources">SOURCES: --</span>
+            </div>
+            <div class="loading-log" id="loading-log">
+                <!-- Loading log entries will be added here -->
+            </div>
+        </div>
+        <div class="loading-classification">
+            <span class="classification-text">UNCLASSIFIED // FOR DEMONSTRATION PURPOSES ONLY</span>
+        </div>
+    </div>
+
+    <!-- ================================================================== -->
+    <!-- MAIN APPLICATION                                                   -->
+    <!-- ================================================================== -->
+    <div id="app" class="app hidden">
+        
+        <!-- ============================================================== -->
+        <!-- HEADER                                                         -->
+        <!-- ============================================================== -->
+        <header class="header">
+            <div class="header-left">
+                <div class="header-logo">
+                    <span class="logo-icon">◉</span>
+                    <span class="logo-text">APT INTELLIGENCE DASHBOARD</span>
+                </div>
+                <div class="header-classification">UNCLASSIFIED</div>
+            </div>
+            <div class="header-center">
+                <div class="search-container">
+                    <input 
+                        type="text" 
+                        id="global-search" 
+                        class="search-input" 
+                        placeholder="Search threat actors, reports, or keywords..."
+                        autocomplete="off"
+                    >
+                    <button class="search-clear" id="search-clear" title="Clear search">✕</button>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="header-stats">
+                    <span class="header-stat" id="header-stat-actors">
+                        <span class="stat-value">--</span>
+                        <span class="stat-label">ACTORS</span>
+                    </span>
+                    <span class="header-stat" id="header-stat-reports">
+                        <span class="stat-value">--</span>
+                        <span class="stat-label">REPORTS</span>
+                    </span>
+                </div>
+                <button class="header-button" id="btn-refresh" title="Refresh data">
+                    <span class="icon">↻</span>
+                </button>
+                <button class="header-button" id="btn-settings" title="Settings">
+                    <span class="icon">⚙</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- ============================================================== -->
+        <!-- NAVIGATION TABS                                                -->
+        <!-- ============================================================== -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-view="worldmap">
+                <span class="tab-icon">🌍</span>
+                <span class="tab-label">WORLD MAP</span>
+            </button>
+            <button class="nav-tab" data-view="actors">
+                <span class="tab-icon">👤</span>
+                <span class="tab-label">THREAT ACTORS</span>
+            </button>
+            <button class="nav-tab" data-view="timeline">
+                <span class="tab-icon">📅</span>
+                <span class="tab-label">TIMELINE</span>
+            </button>
+            <button class="nav-tab" data-view="reports">
+                <span class="tab-icon">📄</span>
+                <span class="tab-label">REPORTS</span>
+            </button>
+            <button class="nav-tab" data-view="statistics">
+                <span class="tab-icon">📊</span>
+                <span class="tab-label">STATISTICS</span>
+            </button>
+        </nav>
+
+        <!-- ============================================================== -->
+        <!-- MAIN CONTENT AREA                                              -->
+        <!-- ============================================================== -->
+        <main id="main-content" class="main-content" tabindex="-1">
+            
+            <!-- FILTERS SIDEBAR -->
+            <aside class="filters-sidebar" id="filters-sidebar">
+                <div class="filter-section">
+                    <h3 class="filter-title">ATTRIBUTION</h3>
+                    <div class="filter-group" id="filter-countries">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="filter-section">
+                    <h3 class="filter-title">TARGET SECTORS</h3>
+                    <div class="filter-group" id="filter-sectors">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="filter-section">
+                    <h3 class="filter-title">OPTIONS</h3>
+                    <div class="filter-group">
+                        <label class="filter-checkbox">
+                            <input type="checkbox" id="filter-has-reports">
+                            <span class="checkmark"></span>
+                            <span class="filter-label">Has reports</span>
+                        </label>
+                        <label class="filter-checkbox">
+                            <input type="checkbox" id="filter-state-sponsored">
+                            <span class="checkmark"></span>
+                            <span class="filter-label">State-sponsored only</span>
+                        </label>
+                    </div>
+                </div>
+                <button class="filter-reset" id="filter-reset">RESET FILTERS</button>
+            </aside>
+
+            <!-- CONTENT VIEWS -->
+            <div class="content-area">
+                
+                <!-- WORLD MAP VIEW -->
+                <section class="view-panel active" id="view-worldmap">
+                    <div class="map-view-header">
+                        <h2 class="map-view-title">GLOBAL THREAT LANDSCAPE</h2>
+                        <div class="map-view-stats">
+                            <div class="map-view-stat">
+                                <span class="map-view-stat-value" id="map-country-count">--</span>
+                                <span class="map-view-stat-label">COUNTRIES</span>
+                            </div>
+                            <div class="map-view-stat">
+                                <span class="map-view-stat-value" id="map-actor-count">--</span>
+                                <span class="map-view-stat-label">ACTORS</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="world-map-wrapper" id="world-map-wrapper">
+                        <!-- World map populated by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- ACTORS VIEW -->
+                <section class="view-panel" id="view-actors">
+                    <div class="view-header">
+                        <h2 class="view-title">THREAT ACTORS</h2>
+                        <div class="view-controls">
+                            <span class="results-count" id="actors-count">Loading...</span>
+                            <div class="sort-control">
+                                <label class="sort-label">Sort:</label>
+                                <select class="sort-select" id="actor-sort">
+                                    <option value="name">Name (A-Z)</option>
+                                    <option value="name-desc">Name (Z-A)</option>
+                                    <option value="age">Age (Oldest)</option>
+                                    <option value="age-desc" selected>Age (Newest)</option>
+                                    <option value="ttps">TTPs (Most)</option>
+                                    <option value="reports">Reports (Most)</option>
+                                    <option value="sectors">Sectors (Most)</option>
+                                    <option value="country">Country (A-Z)</option>
+                                </select>
+                            </div>
+                            <button class="view-toggle active" data-mode="grid" title="Grid view">▦</button>
+                            <button class="view-toggle" data-mode="list" title="List view">☰</button>
+                        </div>
+                    </div>
+                    <div class="actors-grid" id="actors-grid">
+                        <!-- Actor cards populated by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- TIMELINE VIEW -->
+                <section class="view-panel" id="view-timeline">
+                    <div class="view-header">
+                        <h2 class="view-title">CHRONOLOGICAL TIMELINE</h2>
+                        <div class="view-controls">
+                            <span class="results-count" id="timeline-count">Loading...</span>
+                            <div class="sort-control">
+                                <label class="sort-label">Order:</label>
+                                <select class="sort-select" id="timeline-sort">
+                                    <option value="desc" selected>Newest First</option>
+                                    <option value="asc">Oldest First</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-container" id="timeline-container">
+                        <!-- Timeline populated by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- REPORTS VIEW -->
+                <section class="view-panel" id="view-reports">
+                    <div class="view-header">
+                        <h2 class="view-title">THREAT INTELLIGENCE REPORTS</h2>
+                        <div class="view-controls">
+                            <span class="results-count" id="reports-count">Loading...</span>
+                            <div class="sort-control">
+                                <label class="sort-label">Sort:</label>
+                                <select class="sort-select" id="reports-sort">
+                                    <option value="date-desc" selected>Date (Newest)</option>
+                                    <option value="date-asc">Date (Oldest)</option>
+                                    <option value="title">Title (A-Z)</option>
+                                    <option value="source">Source (A-Z)</option>
+                                </select>
+                            </div>
+                            <button class="view-toggle active" data-mode="grid" data-target="reports" title="Grid view">▦</button>
+                            <button class="view-toggle" data-mode="list" data-target="reports" title="List view">☰</button>
+                        </div>
+                    </div>
+                    <div class="reports-grid" id="reports-grid">
+                        <!-- Reports populated by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- STATISTICS VIEW -->
+                <section class="view-panel" id="view-statistics">
+                    <div class="view-header">
+                        <h2 class="view-title">INTELLIGENCE STATISTICS</h2>
+                    </div>
+                    <div class="statistics-grid" id="statistics-grid">
+                        <!-- Statistics populated by JavaScript -->
+                    </div>
+                </section>
+
+            </div>
+        </main>
+
+        <!-- ============================================================== -->
+        <!-- FOOTER                                                         -->
+        <!-- ============================================================== -->
+        <footer class="footer">
+            <div class="footer-left">
+                <span class="footer-text">Data sources: MISP Galaxy, APTnotes</span>
+            </div>
+            <div class="footer-center">
+                <span class="footer-text" id="last-updated">Last updated: --</span>
+            </div>
+            <div class="footer-right">
+                <span class="footer-text">APT Intelligence Dashboard v1.0</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- ================================================================== -->
+    <!-- ACTOR DETAIL MODAL                                                 -->
+    <!-- ================================================================== -->
+    <div id="actor-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="dossier-title">
+        <div class="modal-backdrop"></div>
+        <div class="modal-container dossier-container">
+            <button class="modal-close" id="modal-close" aria-label="Close dossier">
+                <span aria-hidden="true">✕</span>
+            </button>
+            
+            <!-- Dossier Header -->
+            <div class="dossier-header">
+                <div class="dossier-classification">
+                    <span class="classification-label">CLASSIFICATION</span>
+                    <span class="classification-value">UNCLASSIFIED</span>
+                </div>
+                <div class="dossier-title-section">
+                    <h1 class="dossier-title" id="dossier-title">
+                        <!-- Actor name - typewriter effect -->
+                    </h1>
+                    <div class="dossier-aliases" id="dossier-aliases">
+                        <!-- Aliases -->
+                    </div>
+                </div>
+                <div class="dossier-meta">
+                    <div class="dossier-meta-item">
+                        <span class="meta-label">ATTRIBUTION</span>
+                        <span class="meta-value" id="dossier-attribution">--</span>
+                    </div>
+                    <div class="dossier-meta-item">
+                        <span class="meta-label">FIRST OBSERVED</span>
+                        <span class="meta-value" id="dossier-first-seen">--</span>
+                    </div>
+                    <div class="dossier-meta-item">
+                        <span class="meta-label">CONFIDENCE</span>
+                        <span class="meta-value" id="dossier-confidence">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dossier Body -->
+            <div class="dossier-body">
+                <!-- Description Section -->
+                <section class="dossier-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">📋</span>
+                        SUBJECT OVERVIEW
+                    </h2>
+                    <div class="section-content" id="dossier-description">
+                        <!-- Description with typewriter effect -->
+                    </div>
+                </section>
+
+                <!-- Targeting Section -->
+                <section class="dossier-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🎯</span>
+                        TARGETING PROFILE
+                    </h2>
+                    <div class="section-content">
+                        <div class="targeting-grid">
+                            <div class="targeting-item">
+                                <span class="targeting-label">TARGET SECTORS</span>
+                                <div class="targeting-tags" id="dossier-sectors">
+                                    <!-- Sector tags -->
+                                </div>
+                            </div>
+                            <div class="targeting-item">
+                                <span class="targeting-label">KNOWN VICTIMS</span>
+                                <div class="targeting-tags" id="dossier-victims">
+                                    <!-- Victim country tags -->
+                                </div>
+                            </div>
+                            <div class="targeting-item">
+                                <span class="targeting-label">INCIDENT TYPE</span>
+                                <div class="targeting-value" id="dossier-incident-type">
+                                    <!-- Incident type -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- MITRE ATT&CK Techniques Section -->
+                <section class="dossier-section" id="dossier-techniques-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🎯</span>
+                        MITRE ATT&CK TECHNIQUES
+                        <span class="section-count" id="dossier-techniques-count">(0)</span>
+                    </h2>
+                    <div class="section-content">
+                        <div class="techniques-grid" id="dossier-techniques">
+                            <!-- MITRE technique tags -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Attack Vectors Section (from Google APT data) -->
+                <section class="dossier-section" id="dossier-attack-vectors-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">⚔️</span>
+                        ATTACK VECTORS
+                    </h2>
+                    <div class="section-content">
+                        <div class="targeting-tags" id="dossier-attack-vectors">
+                            <!-- Attack vector tags -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Associated Malware Section (from Google APT data) -->
+                <section class="dossier-section" id="dossier-malware-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🦠</span>
+                        ASSOCIATED MALWARE
+                    </h2>
+                    <div class="section-content">
+                        <div class="targeting-tags" id="dossier-malware">
+                            <!-- Malware tags -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Malware IOCs Section (from APTMalware data) -->
+                <section class="dossier-section" id="dossier-iocs-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔍</span>
+                        MALWARE SAMPLE IOCs
+                        <span class="section-count" id="dossier-iocs-count">(0)</span>
+                    </h2>
+                    <div class="section-content">
+                        <div class="iocs-summary" id="dossier-iocs-summary">
+                            <!-- IOC summary stats -->
+                        </div>
+                        <div class="iocs-hashes" id="dossier-iocs-hashes">
+                            <!-- Sample hashes (expandable) -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Reports Section -->
+                <section class="dossier-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">📄</span>
+                        INTELLIGENCE REPORTS
+                        <span class="section-count" id="dossier-reports-count">(0)</span>
+                    </h2>
+                    <div class="section-content">
+                        <div class="reports-table" id="dossier-reports">
+                            <!-- Reports table -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- References Section -->
+                <section class="dossier-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔗</span>
+                        EXTERNAL REFERENCES
+                        <span class="section-count" id="dossier-refs-count">(0)</span>
+                    </h2>
+                    <div class="section-content">
+                        <ul class="references-list" id="dossier-refs">
+                            <!-- Reference links -->
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Related Actors Section -->
+                <section class="dossier-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔀</span>
+                        RELATED THREAT ACTORS
+                    </h2>
+                    <div class="section-content">
+                        <div class="related-actors" id="dossier-related">
+                            <!-- Related actor cards -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Dossier Footer -->
+            <div class="dossier-footer">
+                <div class="dossier-id">
+                    <span class="id-label">RECORD ID:</span>
+                    <span class="id-value" id="dossier-uuid">--</span>
+                </div>
+                <div class="dossier-timestamp">
+                    <span class="timestamp-label">GENERATED:</span>
+                    <span class="timestamp-value" id="dossier-timestamp">--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================== -->
+    <!-- REPORT DETAIL MODAL                                                -->
+    <!-- ================================================================== -->
+    <div id="report-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="report-modal-title">
+        <div class="modal-backdrop"></div>
+        <div class="modal-container report-modal-container">
+            <button class="modal-close" id="report-modal-close" aria-label="Close report">
+                <span aria-hidden="true">✕</span>
+            </button>
+            
+            <!-- Report Header -->
+            <div class="report-modal-header">
+                <div class="report-modal-icon">📄</div>
+                <div class="report-modal-meta">
+                    <span class="report-modal-date" id="report-modal-date">--</span>
+                    <span class="report-modal-source" id="report-modal-source">--</span>
+                </div>
+            </div>
+            
+            <!-- Report Title -->
+            <h2 id="report-modal-title" class="report-modal-title">--</h2>
+            
+            <!-- Report Info -->
+            <div class="report-modal-info">
+                <div class="report-modal-field">
+                    <span class="report-modal-label">FILENAME</span>
+                    <span class="report-modal-value" id="report-modal-filename">--</span>
+                </div>
+            </div>
+            
+            <!-- Linked Actors Section -->
+            <div class="report-modal-section">
+                <h3 class="report-modal-section-title">
+                    <span class="section-icon">👥</span>
+                    LINKED THREAT ACTORS
+                    <span class="section-count" id="report-modal-actors-count">(0)</span>
+                </h3>
+                <div class="report-modal-actors" id="report-modal-actors">
+                    <!-- Actor chips -->
+                </div>
+            </div>
+            
+            <!-- Download Section -->
+            <div class="report-modal-actions">
+                <a href="#" target="_blank" rel="noopener" class="report-modal-download" id="report-modal-link">
+                    <span class="download-icon">⬇️</span>
+                    <span>DOWNLOAD REPORT (PDF)</span>
+                </a>
+            </div>
+            
+            <!-- Footer -->
+            <div class="report-modal-footer">
+                <span class="report-modal-source-badge">📡 Data from APTnotes (GitHub)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================== -->
+    <!-- SETTINGS MODAL                                                     -->
+    <!-- ================================================================== -->
+    <div id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+        <div class="modal-backdrop"></div>
+        <div class="modal-container settings-container">
+            <button class="modal-close" id="settings-close" aria-label="Close settings">
+                <span aria-hidden="true">✕</span>
+            </button>
+            <h2 id="settings-title" class="modal-title">SETTINGS</h2>
+            
+            <div class="settings-section">
+                <h3 class="settings-subtitle">Data Sources</h3>
+                <div class="settings-group">
+                    <label class="settings-checkbox">
+                        <input type="checkbox" id="setting-mitre-enabled">
+                        <span class="checkmark"></span>
+                        <span class="settings-label">Enable MITRE ATT&CK Integration (Phase 2)</span>
+                    </label>
+                    <p class="settings-note">Warning: MITRE ATT&CK data is approximately 25MB and will increase load times.</p>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3 class="settings-subtitle">Display Options</h3>
+                <div class="settings-group">
+                    <label class="settings-checkbox">
+                        <input type="checkbox" id="setting-animations" checked>
+                        <span class="checkmark"></span>
+                        <span class="settings-label">Enable typewriter animations</span>
+                    </label>
+                    <label class="settings-checkbox">
+                        <input type="checkbox" id="setting-sounds" checked>
+                        <span class="checkmark"></span>
+                        <span class="settings-label">Enable keyboard sounds</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3 class="settings-subtitle">Cache Management</h3>
+                <div class="cache-status" id="cache-status">
+                    <!-- Cache status populated by JavaScript -->
+                </div>
+                <button class="settings-button" id="btn-clear-cache">Clear Cache & Refresh</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================== -->
+    <!-- ERROR TOAST                                                        -->
+    <!-- ================================================================== -->
+    <div id="toast-container" class="toast-container">
+        <!-- Toast notifications appended here -->
+    </div>
+
+    <!-- ================================================================== -->
+    <!-- SCRIPTS                                                            -->
+    <!-- ================================================================== -->
+    <!-- Core Utilities (load first) -->
+    <script src="js/debug.js"></script>
+    <script src="js/environment.js"></script>
+    <script src="js/storageManager.js"></script>
+    <script src="js/focusTrap.js"></script>
+    <script src="js/errorHandler.js"></script>
+    <script src="js/a11yAnnouncer.js"></script>
+    
+    <!-- Data Layer -->
+    <script src="js/data/nameNormalizer.js"></script>
+    <script src="js/data/dataNormalizer.js"></script>
+    <script src="js/data/dataLoader.js"></script>
+    <script src="js/data/actorParser.js"></script>
+    <script src="js/data/mitreAdapter.js"></script>
+    <script src="js/data/countryData.js"></script>
+    <script src="js/data/googleAptParser.js"></script>
+    <script src="js/data/aptMalwareParser.js"></script>
+    <script src="js/data/malpediaParser.js"></script>
+    <script src="js/data/breachHQParser.js"></script>
+    <script src="js/data/etdaParser.js"></script>
+    <script src="js/data/liveDataFetcher.js"></script>
+    
+    <!-- UI Components -->
+    <script src="js/ui/dashboard.js"></script>
+    <script src="js/ui/actorCard.js"></script>
+    <script src="js/ui/dossierView.js"></script>
+    <script src="js/ui/timeline.js"></script>
+    <script src="js/ui/worldMap.js"></script>
+    
+    <!-- Utilities -->
+    <script src="js/utils/search.js"></script>
+    <script src="js/utils/helpers.js"></script>
+    
+    <!-- Main Application -->
+    <script src="js/app.js"></script>
+    
+    <!-- Enhancement Modules (load last) -->
+    <script src="js/keyboardShortcuts.js" defer></script>
+</body>
+</html>

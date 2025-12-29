@@ -1,0 +1,338 @@
+/**
+ * APT Intelligence Dashboard - Print Stylesheet
+ * 
+ * Optimizes the dashboard for printing by hiding navigation,
+ * showing content in a readable format, and removing interactive elements.
+ */
+
+@media print {
+    /* =========================================================================
+       RESET & BASE
+       ========================================================================= */
+    
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 12pt;
+        line-height: 1.4;
+    }
+
+    /* =========================================================================
+       HIDE NON-ESSENTIAL ELEMENTS
+       ========================================================================= */
+    
+    /* Navigation & Interactive Elements */
+    .sidebar,
+    .nav-tabs,
+    .filters-sidebar,
+    .settings-modal,
+    .actor-modal,
+    .toast-container,
+    .skip-link,
+    .environment-indicator,
+    #map-tooltip,
+    button:not(.print-show),
+    input[type="checkbox"],
+    input[type="text"],
+    select,
+    .search-container,
+    .refresh-btn,
+    .settings-btn,
+    .modal-close,
+    .view-more-btn,
+    .filter-group,
+    footer {
+        display: none !important;
+    }
+
+    /* Map is difficult to print - hide unless specifically needed */
+    .world-map,
+    #world-map-svg {
+        display: none !important;
+    }
+
+    /* =========================================================================
+       LAYOUT ADJUSTMENTS
+       ========================================================================= */
+    
+    .main-content {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+    }
+
+    .content-area {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Header for print */
+    header {
+        position: static !important;
+        background: white !important;
+        border-bottom: 2px solid #333 !important;
+        padding: 10pt 0 !important;
+        margin-bottom: 20pt !important;
+    }
+
+    header .logo {
+        color: black !important;
+        font-size: 18pt !important;
+    }
+
+    /* =========================================================================
+       ACTOR CARDS
+       ========================================================================= */
+    
+    .actors-grid {
+        display: block !important;
+        column-count: 2;
+        column-gap: 20pt;
+    }
+
+    .actor-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        background: white !important;
+        border: 1px solid #333 !important;
+        margin-bottom: 15pt !important;
+        padding: 10pt !important;
+        box-shadow: none !important;
+    }
+
+    .actor-card:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    .actor-name {
+        color: black !important;
+        font-size: 11pt !important;
+        font-weight: bold !important;
+    }
+
+    .actor-country,
+    .actor-aliases,
+    .actor-description {
+        color: #333 !important;
+        font-size: 10pt !important;
+    }
+
+    .actor-country img {
+        display: none !important;
+    }
+
+    /* Severity badges */
+    .severity-badge,
+    .threat-level {
+        border: 1px solid #333 !important;
+        background: white !important;
+        color: black !important;
+    }
+
+    /* =========================================================================
+       REPORTS VIEW
+       ========================================================================= */
+    
+    .reports-grid {
+        display: block !important;
+    }
+
+    .report-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        background: white !important;
+        border: 1px solid #333 !important;
+        margin-bottom: 10pt !important;
+        padding: 10pt !important;
+    }
+
+    .report-title {
+        color: black !important;
+        font-weight: bold !important;
+    }
+
+    /* =========================================================================
+       STATISTICS VIEW
+       ========================================================================= */
+    
+    .stats-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15pt !important;
+    }
+
+    .stat-card {
+        background: white !important;
+        border: 1px solid #333 !important;
+        padding: 10pt !important;
+    }
+
+    .stat-value {
+        color: black !important;
+        font-weight: bold !important;
+        font-size: 14pt !important;
+    }
+
+    .stat-label {
+        color: #333 !important;
+    }
+
+    /* Charts - simplified for print */
+    .chart-container {
+        max-height: 200pt !important;
+        overflow: hidden !important;
+    }
+
+    /* =========================================================================
+       TIMELINE VIEW
+       ========================================================================= */
+    
+    .timeline-container {
+        padding: 0 !important;
+    }
+
+    .timeline-item {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        border: 1px solid #333 !important;
+        background: white !important;
+        margin-bottom: 10pt !important;
+        padding: 10pt !important;
+    }
+
+    .timeline-date {
+        color: #333 !important;
+        font-weight: bold !important;
+    }
+
+    /* =========================================================================
+       LINKS
+       ========================================================================= */
+    
+    a {
+        color: black !important;
+        text-decoration: underline !important;
+    }
+
+    /* Show URLs for links */
+    a[href^="http"]::after {
+        content: " (" attr(href) ")";
+        font-size: 9pt;
+        color: #666;
+        word-wrap: break-word;
+    }
+
+    /* Don't show URLs for internal links */
+    a[href^="#"]::after,
+    a[href^="javascript"]::after {
+        content: none !important;
+    }
+
+    /* =========================================================================
+       PAGE BREAKS
+       ========================================================================= */
+    
+    h1, h2, h3 {
+        page-break-after: avoid;
+        break-after: avoid;
+    }
+
+    .actor-card,
+    .report-card,
+    .timeline-item {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    /* Force page break before certain sections if needed */
+    .view-section:not(:first-child) {
+        page-break-before: always;
+    }
+
+    /* =========================================================================
+       PRINT HEADER/FOOTER
+       ========================================================================= */
+    
+    @page {
+        margin: 0.75in;
+        size: letter portrait;
+    }
+
+    @page :first {
+        margin-top: 0.5in;
+    }
+
+    /* Print-specific header */
+    .print-header {
+        display: block !important;
+        text-align: center;
+        border-bottom: 2px solid black;
+        padding-bottom: 10pt;
+        margin-bottom: 20pt;
+    }
+
+    .print-header h1 {
+        font-size: 18pt;
+        margin: 0;
+    }
+
+    .print-header .print-date {
+        font-size: 10pt;
+        color: #666;
+    }
+
+    /* Print-specific footer */
+    .print-footer {
+        display: block !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 9pt;
+        color: #666;
+        border-top: 1px solid #ccc;
+        padding-top: 5pt;
+    }
+
+    /* =========================================================================
+       UTILITY CLASSES FOR PRINT
+       ========================================================================= */
+    
+    .print-only {
+        display: block !important;
+    }
+
+    .no-print,
+    .screen-only {
+        display: none !important;
+    }
+
+    /* Ensure images are reasonable size */
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    /* Remove animations */
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Screen-only utility class (inverse of print-only) */
+@media screen {
+    .print-only {
+        display: none !important;
+    }
+}
+

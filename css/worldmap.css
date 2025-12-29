@@ -1,0 +1,277 @@
+/**
+ * APT Intelligence Dashboard - World Map Styles
+ * 
+ * Styles for the D3.js interactive world map with country boundaries
+ * and flag markers.
+ * 
+ * @version 2.0.0
+ */
+
+/* =========================================================================
+   WORLD MAP CONTAINER
+   ========================================================================= */
+
+.world-map-wrapper {
+    width: 100%;
+    height: 600px;
+    position: relative;
+    background: #0a0e14;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.world-map-wrapper.ready {
+    opacity: 1;
+}
+
+.world-map-wrapper svg {
+    display: block;
+}
+
+/* =========================================================================
+   MAP VIEW HEADER
+   ========================================================================= */
+
+.map-view-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-border-primary);
+}
+
+.map-view-title {
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    font-weight: 400;
+    color: var(--color-accent-primary);
+    letter-spacing: 0.1em;
+}
+
+.map-view-stats {
+    display: flex;
+    gap: var(--space-xl);
+}
+
+.map-view-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    background: rgba(0, 255, 136, 0.05);
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--color-border-accent);
+    border-radius: var(--radius-md);
+}
+
+.map-view-stat-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--color-accent-primary);
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    line-height: 1;
+}
+
+.map-view-stat-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+    letter-spacing: 0.1em;
+    margin-top: var(--space-xs);
+}
+
+/* =========================================================================
+   D3.JS MAP ELEMENTS
+   ========================================================================= */
+
+.map-markers-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* =========================================================================
+   FLAG MARKERS
+   ========================================================================= */
+
+.map-flag-marker {
+    position: absolute;
+    cursor: pointer;
+    z-index: 10;
+    pointer-events: auto;
+    transition: transform 0.2s ease, z-index 0s;
+    /* Ensure badge is not clipped */
+    overflow: visible;
+}
+
+.map-flag-marker:hover {
+    z-index: 100;
+}
+
+.map-flag-marker.selected {
+    z-index: 90;
+}
+
+.flag-marker-inner {
+    position: relative;
+    border-radius: 4px;
+    /* Use clip-path instead of overflow:hidden to allow badge to overflow */
+    overflow: visible;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 0 2px #1a2028;
+    background: #1a2028;
+    transition: box-shadow 0.2s ease;
+}
+
+.flag-marker-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 4px;
+}
+
+.map-flag-marker:hover .flag-marker-inner {
+    box-shadow: 0 4px 16px rgba(0, 255, 136, 0.4), 0 0 0 2px #00ff88;
+}
+
+.map-flag-marker:hover .flag-marker-count {
+    transform: scale(1.15);
+    box-shadow: 
+        0 4px 16px rgba(255, 51, 102, 0.8),
+        0 0 0 3px rgba(255, 255, 255, 1),
+        0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+.flag-marker-count {
+    position: absolute;
+    bottom: -12px;
+    right: -12px;
+    min-width: 32px;
+    height: 28px;
+    padding: 0 10px;
+    background: linear-gradient(135deg, #ff3366 0%, #ff0044 100%);
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 800;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 
+        0 3px 10px rgba(255, 51, 102, 0.7),
+        0 0 0 3px rgba(255, 255, 255, 1),
+        0 0 0 5px rgba(0, 0, 0, 0.3),
+        0 6px 16px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    overflow: visible;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    letter-spacing: 0.5px;
+    z-index: 20;
+}
+
+/* =========================================================================
+   TOOLTIP
+   ========================================================================= */
+
+.world-map-tooltip {
+    position: absolute;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 10px 14px;
+    pointer-events: none;
+    z-index: 200;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    display: none;
+}
+
+.world-map-tooltip.visible {
+    display: block;
+}
+
+/* =========================================================================
+   INLINE FLAGS (for filter sidebar, actor cards, etc.)
+   ========================================================================= */
+
+.country-flag {
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.country-flag-with-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.country-flag-with-name .country-name {
+    font-family: var(--font-sans);
+    font-size: inherit;
+    color: inherit;
+}
+
+/* Filter sidebar flags */
+.filter-group label .country-flag {
+    margin-right: 6px;
+}
+
+/* Actor card flags */
+.actor-country .country-flag {
+    margin-right: 4px;
+}
+
+/* Timeline flags */
+.timeline-attribution .country-flag {
+    margin-right: 4px;
+}
+
+/* Dossier modal flags */
+.dossier-attribution .country-flag {
+    margin-right: 8px;
+}
+
+/* Statistics view flags */
+.stat-bar-label .country-flag {
+    margin-right: 6px;
+}
+
+/* =========================================================================
+   RESPONSIVE ADJUSTMENTS
+   ========================================================================= */
+
+@media (max-width: 1200px) {
+    .world-map-wrapper {
+        height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .world-map-wrapper {
+        height: 400px;
+    }
+    
+    .map-view-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-md);
+    }
+    
+    .map-view-stats {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .map-view-stat {
+        align-items: flex-start;
+    }
+}
